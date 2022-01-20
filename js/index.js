@@ -31,7 +31,26 @@ window.onload = () => {
     }
   }
 
+  class Obstacle {
+    constructor() {
+      this.x = Math.random() * canvas.width;
+      this.y = 0;
+      this.w = 100;
+      this.h = 25;
+    }
+
+    move() {
+      this.y = this.y + 1;
+    }
+  }
+
   const driver = new Player();
+
+  const ob1 = new Obstacle();
+
+  const obstacleArr = [];
+
+  obstacleArr.push(ob1);
 
   //Movements
   document.addEventListener("keydown", function (e) {
@@ -45,13 +64,58 @@ window.onload = () => {
     }
   });
 
+  function createObj() {
+    obstacleArr.push(new Obstacle());
+  }
+
   function startGame() {
+    setInterval(createObj, 2000);
     animate();
   }
+
+  // let counter = 0;
 
   function animate() {
     window.requestAnimationFrame(animate);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(driver.image, driver.x, driver.y, 50, 90);
+
+    //animate the obstacles
+    for (let i = 0; i < obstacleArr.length; i++) {
+      ctx.fillStyle = "red";
+      obstacleArr[i].move();
+      ctx.fillRect(
+        obstacleArr[i].x,
+        obstacleArr[i].y,
+        obstacleArr[i].w,
+        obstacleArr[i].h
+      );
+      //Call the collision function, and compare it to every object
+      // didCollide = detectCollision(player, obstacleArr[i]);
+      // if (didCollide) {
+      //   console.log("COLLISION");
+      //   itemArr.splice(i, 1);
+      // }
+    }
+
+    // if (counter >= 100) {
+    //   obstacleArr.push(new Obstacle());
+    //   counter = 0;
+    // } else {
+    //   counter++;
+    // }
+  }
+
+  function detectCollision(player, obj) {
+    if (
+      player.x < obj.x + obj.w &&
+      player.x + player.w > obj.x &&
+      player.y < obj.y + obj.h &&
+      player.y + player.h > obj.y
+    ) {
+      return true;
+    } else {
+      return false;
+    }
   }
 };
