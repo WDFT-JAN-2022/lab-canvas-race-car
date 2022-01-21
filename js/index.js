@@ -5,6 +5,7 @@ window.onload = () => {
 
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
+  let isGameOn = false;
 
   const car = new Image();
   car.src = "../images/car.png";
@@ -16,6 +17,8 @@ window.onload = () => {
     constructor() {
       this.x = canvas.width / 2;
       this.y = canvas.height - 100;
+      this.w = 50;
+      this.h = 90;
       this.image = car;
     }
 
@@ -40,7 +43,7 @@ window.onload = () => {
     }
 
     move() {
-      this.y = this.y + 1;
+      this.y = this.y + 3;
     }
   }
 
@@ -48,7 +51,7 @@ window.onload = () => {
 
   const ob1 = new Obstacle();
 
-  const obstacleArr = [];
+  let obstacleArr = [];
 
   obstacleArr.push(ob1);
 
@@ -69,16 +72,23 @@ window.onload = () => {
   }
 
   function startGame() {
-    setInterval(createObj, 2000);
-    animate();
+    if (!isGameOn) {
+      isGameOn = true;
+      setInterval(createObj, 2000);
+      animate();
+    } else {
+      console.log("Game is already running");
+    }
   }
 
   // let counter = 0;
+  let game;
+  let gameWillEnd = false;
 
   function animate() {
-    window.requestAnimationFrame(animate);
+    game = window.requestAnimationFrame(animate);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(driver.image, driver.x, driver.y, 50, 90);
+    ctx.drawImage(driver.image, driver.x, driver.y, driver.w, driver.h);
 
     //animate the obstacles
     for (let i = 0; i < obstacleArr.length; i++) {
@@ -90,20 +100,31 @@ window.onload = () => {
         obstacleArr[i].w,
         obstacleArr[i].h
       );
-      //Call the collision function, and compare it to every object
-      // didCollide = detectCollision(player, obstacleArr[i]);
-      // if (didCollide) {
-      //   console.log("COLLISION");
-      //   itemArr.splice(i, 1);
-      // }
+      // Call the collision function, and compare it to every object
+      didCollide = detectCollision(driver, obstacleArr[i]);
+      if (didCollide) {
+        // gameWillEnd = true;
+        break;
+        // itemArr.splice(i, 1);
+      }
     }
-
+    //One way to determine new obstacles
     // if (counter >= 100) {
     //   obstacleArr.push(new Obstacle());
     //   counter = 0;
     // } else {
     //   counter++;
     // }
+    if (didCollide) {
+      console.log("COLLISION");
+      gameOver();
+    }
+  }
+
+  function gameOver() {
+    console.log("YOU LOSE");
+    window.cancelAnimationFrame(game);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
   }
 
   function detectCollision(player, obj) {
