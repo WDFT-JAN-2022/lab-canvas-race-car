@@ -68,11 +68,15 @@ window.onload = () => {
   });
 
   function createObj() {
+    score += 10;
     obstacleArr.push(new Obstacle());
   }
 
+  let score;
+
   function startGame() {
     if (!isGameOn) {
+      score = 0;
       isGameOn = true;
       setInterval(createObj, 2000);
       animate();
@@ -89,6 +93,10 @@ window.onload = () => {
     game = window.requestAnimationFrame(animate);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(driver.image, driver.x, driver.y, driver.w, driver.h);
+    ctx.fillStyle = "white";
+    ctx.font = "30px Ariel";
+
+    ctx.fillText(`Score: ${score}`, 200, 30);
 
     //animate the obstacles
     for (let i = 0; i < obstacleArr.length; i++) {
@@ -122,9 +130,13 @@ window.onload = () => {
   }
 
   function gameOver() {
-    console.log("YOU LOSE");
     window.cancelAnimationFrame(game);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "red";
+    ctx.fillText(`GAME OVER`, 160, 30);
+    ctx.fillStyle = "white";
+    ctx.fillText(`Score: ${score}`, 200, 500);
   }
 
   function detectCollision(player, obj) {
