@@ -15,7 +15,11 @@ window.onload = () => {
       this.y = canvas.height - 100;
       this.w = 50;
       this.h = 90;
-      this.image = car;
+      this.image = new Image();
+      this.image.src = "images/car.png";
+      this.image.onload = () => {
+        console.log("Car loaded");
+      };
     }
 
     move(direction) {
