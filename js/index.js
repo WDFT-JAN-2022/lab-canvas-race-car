@@ -5,6 +5,9 @@ window.onload = () => {
 
   const car = new Image();
   car.src = "images/car.png";
+  car.onload = () => {
+    console.log("Car loaded");
+  };
 
   class Player {
     constructor() {
