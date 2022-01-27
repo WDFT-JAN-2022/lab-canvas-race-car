@@ -4,7 +4,7 @@ window.onload = () => {
   };
 
   const car = new Image();
-  car.src = "./images/car.png";
+  car.src = "images/car.png";
 
   class Player {
     constructor() {
